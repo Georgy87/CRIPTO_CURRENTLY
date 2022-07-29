@@ -1,0 +1,32 @@
+@import '../../styles/variables.scss';
+.input {
+    border: 1px solid #1a237e;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    line-height: 18px;
+    box-sizing: border-box;
+    width: 250px;
+    &:active,
+    &:focus {
+        border: 1px solid #111755;
+        outline: none;
+    }
+}
+
+.input.converter {
+    max-width: 180px;
+    margin-right: 20px;
+}
+
+.input.login {
+    font-size: 16px;
+    line-height: 18px;
+}
+
+.input.error {
+    border: 1px solid $error;
+    &:active, &:focus {
+        border: 1px solid #6c2525;
+    }
+}

@@ -1,0 +1,66 @@
+.table {
+    font-size: 16px;
+    line-height: 22px;
+    border-collapse: separate;
+    border-spacing: 0;
+    @media (max-width: 600px) {
+        font-size: 10px;
+    }
+    .tableHead {
+        display: table;
+        width: 100%;
+        background: #1a237e;
+        color: white;
+        box-sizing: border-box;
+        table-layout: fixed;
+        border-top-right-radius: 20px;
+        tr {
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+            th,
+            td {
+                border: none;
+                padding: 16px;
+                text-align: left;
+            }
+        }
+    }
+    .tableBody {
+        display: block;
+        height: 360px;
+        overflow-y: scroll;
+        background: white;
+        tr {
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+            td {
+                border: none;
+                padding: 16px;
+                text-align: left;
+            }
+        }
+    }
+    tr {
+        height: 60px;
+        box-sizing: border-box;
+        border-bottom: 1px solid #e1e1e1;
+    }
+}
+
+.table.history {
+    max-width: 100%;
+}
+
+.table.exchange {
+    width: 100%;
+    max-width: 750px;
+    tbody {
+        max-height: 400px;
+    }
+    th:first-child,
+    td:first-child {
+        width: 40px;
+    }
+}
