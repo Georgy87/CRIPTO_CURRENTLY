@@ -93,6 +93,7 @@ export const Converter = () => {
                                         {currentListOne.map((option) => {
                                             return (
                                                 <div
+                                                    key={option}
                                                     onClick={(e) => {
                                                         onChangeSelect1(option);
                                                         setIsActive1(false);
@@ -115,6 +116,7 @@ export const Converter = () => {
                                             currentListTwo.map((option) => {
                                                 return (
                                                     <div
+                                                        key={option}
                                                         onClick={(e) => {
                                                             onChangeSelect2(option);
                                                             setIsActive2(false);
