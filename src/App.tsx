@@ -20,9 +20,6 @@ function App() {
 	const isLogin = useSelector(isLoginSelector);
 
 	useEffect(() => {
-		dispatch(
-			fetchLogin({ login: "test@mail.ru", password: "TestPassword123_" })
-		);
 		dispatch(fetchHistory());
 		dispatch(fetchGetQuotes());
 	}, []);
