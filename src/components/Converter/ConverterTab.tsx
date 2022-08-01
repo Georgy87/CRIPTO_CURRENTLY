@@ -6,6 +6,8 @@ import { Input } from '../../layouts/Input/Input';
 import { loadingSelector } from '../../store/slices/history/selectors';
 import { errorSelector, quotesSelector } from '../../store/slices/quotes/quotesSelector';
 import { createRates } from '../../utils/createRates';
+import { ArrowDown } from '../Icons/ArrowDown';
+import { ArrowUp } from '../Icons/ArrowUp';
 import { Loader } from '../Loader/Loader';
 import { ServerError } from '../ServerError/ServerError';
 
@@ -19,6 +21,8 @@ export const Converter = () => {
     const [allRates, setAllRates] = useState<Record<string, Record<string, number>>>({});
     const [sumValue, setSumValue] = useState<string>('0');
     const [conversionResult, setConversionResult] = useState<number | null>();
+    const [isActive1, setIsActive1] = useState<boolean>(false);
+    const [isActive2, setIsActive2] = useState<boolean>(false);
 
     const currentListOne = Object.keys(allRates).sort();
     const [currentsOne, setCurrentsOne] = useState<string>(currentListOne[0]);
@@ -39,18 +43,19 @@ export const Converter = () => {
     }, [currentsOne]);
 
     const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setConversionResult(null);
         setSumValue(e.target.value);
     };
 
-    const onChangeSelect1 = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChangeSelect1 = (option: string) => {
         setConversionResult(null);
-        setCurrentsOne(e.target.value);
-        setCurrentsTwo(Object.keys(allRates[e.target.value]).sort()[0]);
+        setCurrentsOne(option);
+        setCurrentsTwo(Object.keys(allRates[option]).sort()[0]);
     };
 
-    const onChangeSelect2 = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChangeSelect2 = (option: string) => {
         setConversionResult(null);
-        setCurrentsTwo(e.target.value);
+        setCurrentsTwo(option);
     };
 
     if (error !== null) {
@@ -59,12 +64,13 @@ export const Converter = () => {
 
     return (
         <div className={styles.tabRoot}>
+            <div className={styles.header}>Конвертация валют</div>
             {loading ? (
                 <Loader />
             ) : (
                 <>
                     <div className={styles.formWrapper}>
-                        <label className={styles.label}>Сумма</label>
+                        <div className={styles.label}>Сумма</div>
                         <div className={styles.inputsWrapper}>
                             <Input
                                 type="number"
@@ -72,25 +78,56 @@ export const Converter = () => {
                                 value={sumValue}
                                 onChanged={(e: React.ChangeEvent<HTMLInputElement>) => onChangeInput(e)}
                             />
-                            <select onChange={onChangeSelect1}>
-                                {currentListOne.map((current) => {
-                                    return (
-                                        <option key={current} value={current}>
-                                            {current}
-                                        </option>
-                                    );
-                                })}
-                            </select>
-                            <select onChange={onChangeSelect2}>
-                                {Array.isArray(currentListTwo) &&
-                                    currentListTwo.map((current) => {
-                                        return (
-                                            <option key={current} value={current}>
-                                                {current}
-                                            </option>
-                                        );
-                                    })}
-                            </select>
+                            <div className={styles.dropdown}>
+                                <div
+                                    className={styles.dropdownBtn}
+                                    onClick={(e) => {
+                                        setIsActive1(!isActive1);
+                                    }}
+                                >
+                                    {currentsOne}
+                                    <span>{isActive1 ? <ArrowUp /> : <ArrowDown />}</span>
+                                </div>
+                                {isActive1 && (
+                                    <div className={styles.dropdownContent1}>
+                                        {currentListOne.map((option) => {
+                                            return (
+                                                <div
+                                                    onClick={(e) => {
+                                                        onChangeSelect1(option);
+                                                        setIsActive1(false);
+                                                    }}
+                                                    className={styles.dropdownItem}
+                                                >
+                                                    {option}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                                <div className={styles.dropdownBtn} onClick={(e) => setIsActive2(!isActive2)}>
+                                    {currentsTwo}
+                                    <span>{isActive2 ? <ArrowUp /> : <ArrowDown />}</span>
+                                </div>
+                                {isActive2 && (
+                                    <div className={styles.dropdownContent2}>
+                                        {Array.isArray(currentListTwo) &&
+                                            currentListTwo.map((option) => {
+                                                return (
+                                                    <div
+                                                        onClick={(e) => {
+                                                            onChangeSelect2(option);
+                                                            setIsActive2(false);
+                                                        }}
+                                                        className={styles.dropdownItem}
+                                                    >
+                                                        {option}
+                                                    </div>
+                                                );
+                                            })}
+                                    </div>
+                                )}
+                            </div>
                             <Button
                                 onClicked={() => {
                                     setConversionResult(null);
