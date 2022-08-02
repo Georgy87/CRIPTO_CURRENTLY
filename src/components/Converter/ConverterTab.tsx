@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { Button } from '../../layouts/Button/Button';
@@ -6,8 +6,7 @@ import { Input } from '../../layouts/Input/Input';
 import { loadingSelector } from '../../store/slices/history/selectors';
 import { errorSelector, quotesSelector } from '../../store/slices/quotes/quotesSelector';
 import { createRates } from '../../utils/createRates';
-import { ArrowDown } from '../Icons/ArrowDown';
-import { ArrowUp } from '../Icons/ArrowUp';
+import Dropdown from '../Dropdown/Dropdown';
 import { Loader } from '../Loader/Loader';
 import { ServerError } from '../ServerError/ServerError';
 
@@ -21,13 +20,11 @@ export const Converter = () => {
     const [allRates, setAllRates] = useState<Record<string, Record<string, number>>>({});
     const [sumValue, setSumValue] = useState<string>('0');
     const [conversionResult, setConversionResult] = useState<number | null>();
-    const [isActive1, setIsActive1] = useState<boolean>(false);
-    const [isActive2, setIsActive2] = useState<boolean>(false);
 
-    const currentListOne = Object.keys(allRates).sort();
+    const currentListOne = useMemo(() => Object.keys(allRates).sort(), [allRates]);
     const [currentsOne, setCurrentsOne] = useState<string>(currentListOne[0]);
 
-    const currentListTwo = currentsOne && Object.keys(allRates[currentsOne]).sort();
+    const currentListTwo = useMemo(() => currentsOne && Object.keys(allRates[currentsOne]).sort(), [allRates, currentsOne]);
     const [currentsTwo, setCurrentsTwo] = useState<string>(currentListTwo && currentListTwo[0]);
 
     useEffect(() => {
@@ -45,17 +42,6 @@ export const Converter = () => {
     const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setConversionResult(null);
         setSumValue(e.target.value);
-    };
-
-    const onChangeSelect1 = (option: string) => {
-        setConversionResult(null);
-        setCurrentsOne(option);
-        setCurrentsTwo(Object.keys(allRates[option]).sort()[0]);
-    };
-
-    const onChangeSelect2 = (option: string) => {
-        setConversionResult(null);
-        setCurrentsTwo(option);
     };
 
     if (error !== null) {
@@ -78,63 +64,22 @@ export const Converter = () => {
                                 value={sumValue}
                                 onChanged={(e: React.ChangeEvent<HTMLInputElement>) => onChangeInput(e)}
                             />
-                            <div className={styles.dropdown}>
-                                <div
-                                    className={styles.dropdownBtn}
-                                    onClick={(e) => {
-                                        setIsActive1(!isActive1);
-                                    }}
-                                >
-                                    {currentsOne}
-                                    <span>{isActive1 ? <ArrowUp /> : <ArrowDown />}</span>
-                                </div>
-                                {isActive1 && (
-                                    <div className={styles.dropdownContent1}>
-                                        {currentListOne.map((option) => {
-                                            return (
-                                                <div
-                                                    onClick={(e) => {
-                                                        onChangeSelect1(option);
-                                                        setIsActive1(false);
-                                                    }}
-                                                    className={styles.dropdownItem}
-                                                >
-                                                    {option}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                )}
-                                <div className={styles.dropdownBtn} onClick={(e) => setIsActive2(!isActive2)}>
-                                    {currentsTwo}
-                                    <span>{isActive2 ? <ArrowUp /> : <ArrowDown />}</span>
-                                </div>
-                                {isActive2 && (
-                                    <div className={styles.dropdownContent2}>
-                                        {Array.isArray(currentListTwo) &&
-                                            currentListTwo.map((option) => {
-                                                return (
-                                                    <div
-                                                        onClick={(e) => {
-                                                            onChangeSelect2(option);
-                                                            setIsActive2(false);
-                                                        }}
-                                                        className={styles.dropdownItem}
-                                                    >
-                                                        {option}
-                                                    </div>
-                                                );
-                                            })}
-                                    </div>
-                                )}
-                            </div>
+                            <Dropdown
+                                allRates={allRates}
+                                currentsOne={currentsOne}
+                                currentListOne={currentListOne}
+                                currentsTwo={currentsTwo}
+                                currentListTwo={currentListTwo}
+                                setConversionResult={setConversionResult}
+                                setCurrentsOne={setCurrentsOne}
+                                setCurrentsTwo={setCurrentsTwo}
+                            />
                             <Button
                                 onClicked={() => {
                                     setConversionResult(null);
-                                    console.log(allRates, currentsOne, currentsTwo);
                                     setConversionResult(+sumValue * allRates[currentsOne][currentsTwo]);
                                 }}
-                                disabled={!(sumValue.length > 0)}
+                                disabled={!(sumValue.length > 0) || (sumValue === '0')}
                                 className={styles.resultBtn}
                                 typeStyle="primary"
                             >
