@@ -1,3 +1,4 @@
+@import '../../styles/variables.scss';
 .table {
     font-size: 16px;
     line-height: 22px;
@@ -14,6 +15,7 @@
         box-sizing: border-box;
         table-layout: fixed;
         border-top-right-radius: 20px;
+        padding-right: var(--scrollbar-width);
         tr {
             display: table;
             table-layout: fixed;

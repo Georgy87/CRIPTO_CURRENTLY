@@ -16,33 +16,43 @@ import { defaultQuotesState } from './store/slices/quotes/quotesSlice';
 import styles from './App.module.scss';
 
 function App() {
-    const dispatch = useDispatch<AppDispatch>();
-    const isLogin = useSelector(isLoginSelector);
+	const dispatch = useDispatch<AppDispatch>();
+	const isLogin = useSelector(isLoginSelector);
 
-    useEffect(() => {
-        dispatch(fetchHistory());
-        dispatch(fetchGetQuotes());
-    }, []);
+	useEffect(() => {
+		dispatch(fetchHistory());
+		dispatch(fetchGetQuotes());
 
-    return (
-        <div className={styles.app}>
-            <header className={styles.header}>
-                <div className={styles.headerTitle}>TEST SPA app</div>
-                <div className={styles.headerRight}>
-                    {isLogin && (
-                        <Button onClicked={() => { 
-                            dispatch(logout()) 
-                            dispatch(defaultHistoryState())
-                            dispatch(defaultQuotesState())
-                            }} typeStyle="secondary">
-                            Выход
-                        </Button>
-                    )}
-                </div>
-            </header>
-            <div className={styles.mainContent}>{isLogin ? <QuotesPage /> : <LoginPage />}</div>
-        </div>
-    );
+		document.documentElement.style.setProperty(
+			'--scrollbar-width',
+			window.innerWidth - document.documentElement.offsetWidth + 'px'
+		);
+	}, []);
+
+	return (
+		<div className={styles.app}>
+			<header className={styles.header}>
+				<div className={styles.headerTitle}>TEST SPA app</div>
+				<div className={styles.headerRight}>
+					{isLogin && (
+						<Button
+							onClicked={() => {
+								dispatch(logout());
+								dispatch(defaultHistoryState());
+								dispatch(defaultQuotesState());
+							}}
+							typeStyle="secondary"
+						>
+							Выход
+						</Button>
+					)}
+				</div>
+			</header>
+			<div className={styles.mainContent}>
+				{isLogin ? <QuotesPage /> : <LoginPage />}
+			</div>
+		</div>
+	);
 }
 
 export default App;

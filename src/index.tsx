@@ -8,12 +8,12 @@ import { store } from './store';
 
 import './index.css';
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <App />
-        </Provider>
-    </React.StrictMode>
+ReactDOM.createRoot(document.getElementById('root')!).render(
+	<React.StrictMode>
+		<Provider store={store}>
+			<App />
+		</Provider>
+	</React.StrictMode>
 );
 
 reportWebVitals();
